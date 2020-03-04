@@ -52,19 +52,4 @@ class BuyAndHold(bt.Strategy):
                 self.action_buy()
         else:
             if self.recommend_sell() is True:
-                self.action_sell()
-
-class CustomBuyAndHold(BuyAndHold):
-    def next(self):
-        results["cash"].append(self.broker.get_cash())
-        results["portfolio"].append(self.broker.getvalue())
-        results["date"].append(self.datas[0].datetime.datetime(0))
-        super().next()
-
-    def next_open(self):
-        if self.order:
-            return
-        # if not self.position:
-        #     if self.recommend_buy() is True:
-        #         self.log('BUY CREATE, %.2f' % self.data0.lines.open[0])
-        #         self.order = self.buy(coo=True, coc=False)
+                self.execute_sell()
