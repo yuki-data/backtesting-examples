@@ -1,4 +1,6 @@
 """
+created: 200303
+
 pandasのみでbuy and holdストラテジーの資産曲線を作成する。
 
 colaboratoryでbacktraderを使う場合には、
@@ -139,8 +141,9 @@ class CustomBuyAndHold(BuyAndHold):
 `thestrats = cerebro.run(); setattr(cerebro, "thestrats", thestrats)`
 により、あとからanalyzerのデータを取れる
 """
-def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer"):
-    cerebro = bt.Cerebro(stdstats=False, cheat_on_open=True)
+def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer", cheat_on_open=True):
+    cerebro = bt.Cerebro(stdstats=False, cheat_on_open=cheat_on_open)
+    cerebro.broker.set_coc(True)
     cerebro.addstrategy(Strategy)
     # Add the Data Feed to Cerebro
     cerebro.adddata(data)

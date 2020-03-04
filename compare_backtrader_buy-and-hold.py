@@ -1,4 +1,6 @@
 """
+created: 200303
+
 pandasのみでbuy and holdストラテジーの資産曲線を作成する。
 
 colaboratoryでbacktraderを使う場合には、
