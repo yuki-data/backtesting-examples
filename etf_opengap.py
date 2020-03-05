@@ -2,6 +2,15 @@
 created 200304
 
 open gapで1%上がったら買うstrategy。利益が1%出たら利確する。
+
+# バックテストの実行
+data = bt.feeds.PandasData(dataname=df.set_index("Date"), fromdate=datetime.datetime(2011, 3, 1), todate=datetime.datetime(2011, 5, 1))
+cerebro = run_bt(data, Strategy=ETFOpengapStrategy, Analyzer=MyAnalyzer, strategy_kwargs={"gapup_threshold": 1})
+
+# analyzerの結果の確認
+s = pd.DataFrame(cerebro.thestrats[0].analyzers.myanalyzer.get_analysis())
+s.set_index("date").portfolio.plot() # 資産曲線プロット
+
 """
 
 import backtrader as bt
