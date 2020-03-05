@@ -17,6 +17,8 @@ class Opengap(bt.Indicator):
 
 
 class ETFOpengapStrategy(bt.Strategy):
+    params = (("gapup_threshold", 1),)
+
     def log(self, txt, dt=None):
         dt = dt or self.datas[0].datetime.date(0)
         print(dt, txt)
@@ -25,7 +27,7 @@ class ETFOpengapStrategy(bt.Strategy):
         self.order = None
         self.dataclose = self.data0.lines.close
         self.dateopen = self.data0.lines.open
-        self.buy_signal = Opengap(gapup_threshold=1).lines.open_gap_up
+        self.buy_signal = Opengap(gapup_threshold=self.params.gapup_threshold).lines.open_gap_up
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -55,7 +57,7 @@ class ETFOpengapStrategy(bt.Strategy):
         self.log('BUY CREATE, %.2f' % self.dataclose[0])
         # self.order = self.buy(exectype=bt.Order.Market, coc=False)
         # self.order = self.buy(exectype=bt.Order.Close)
-        self.order = self.buy(exectype=bt.Order.Market, coc=False)
+        self.order = self.buy(exectype=bt.Order.Market, coc=True, coo=False)
         # self.order = self.buy(coo=False, coc=True, exectype=bt.Order.Market)
 
     def recommend_sell(self):
