@@ -78,6 +78,10 @@ class ETFOpengapStrategy(bt.Strategy):
         self.order = None
 
     def next(self):
+        # print(self.position)
+        if self.position:
+            print(self.position.price)
+            assert self.position.price == self.price_bought
         self.log(len(self))
         # self.log('Close, %.2f' % self.dataclose[0])
         # self.log('self.buy_signal, %.2f' % self.buy_signal[0])
@@ -113,6 +117,8 @@ class ETFOpengapStrategy(bt.Strategy):
 
     def after_order_completed(self, order):
         self.bar_executed = len(self)
+        if order.isbuy():
+            self.price_bought = order.executed.price
 
 
 def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer", cheat_on_open=True, cheat_on_close=True, strategy_kwargs={}):
