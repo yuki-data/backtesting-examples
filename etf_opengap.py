@@ -115,9 +115,10 @@ class ETFOpengapStrategy(bt.Strategy):
         self.bar_executed = len(self)
 
 
-def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer", cheat_on_open=True, strategy_kwargs={}):
+def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer", cheat_on_open=True, cheat_on_close=True, strategy_kwargs={}):
     cerebro = bt.Cerebro(stdstats=False, cheat_on_open=cheat_on_open)
-    cerebro.broker.set_coc(True)
+    if cheat_on_close:
+        cerebro.broker.set_coc(True)
     cerebro.addstrategy(Strategy, **strategy_kwargs)
     # Add the Data Feed to Cerebro
     cerebro.adddata(data)
