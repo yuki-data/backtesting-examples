@@ -36,12 +36,13 @@ class ETFOpengapStrategy(bt.Strategy):
                 self.log('BUY EXECUTED, %.2f' % order.executed.price)
             elif order.issell():
                 self.log('SELL EXECUTED, %.2f' % order.executed.price)
-            self.bar_executed = len(self)
+            self.after_order_completed(order)
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
             self.log('Order Canceled/Margin/Rejected')
         self.order = None
 
     def next(self):
+        self.log(len(self))
         # self.log('Close, %.2f' % self.dataclose[0])
         # self.log('self.buy_signal, %.2f' % self.buy_signal[0])
         self.go_long()
@@ -73,3 +74,6 @@ class ETFOpengapStrategy(bt.Strategy):
         else:
             if self.recommend_sell() is True:
                 self.execute_sell()
+
+    def after_order_completed(self, order):
+        self.bar_executed = len(self)
