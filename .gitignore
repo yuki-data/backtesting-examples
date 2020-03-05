@@ -1,0 +1,5 @@
+.vscode/
+_readme.md
+*.pyc
+docs/
+debug/
