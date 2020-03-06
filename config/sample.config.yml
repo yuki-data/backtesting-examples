@@ -1,0 +1,6 @@
+# local.config.yml の雛形の設定ファイル
+# local.config.yml はgit管理下に置かず、ローカルで作成。
+
+path:
+  # S&Pインデックス連動型ETFのOHLCデータへのファイルパス
+  sp_etf_data: "path/to/S&P_ETF_OHLC_data.csv"

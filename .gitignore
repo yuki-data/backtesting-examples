@@ -3,3 +3,6 @@ _readme.md
 *.pyc
 docs/
 debug/
+
+# 開発環境依存の設定
+local.config.yml

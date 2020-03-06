@@ -1,10 +1,12 @@
 import datetime
-import backtrader as bt
 from pathlib import Path
-from etf_opengap import run_bt, ETFOpengapStrategy, MyAnalyzer
 import pandas as pd
+import backtrader as bt
+from etf_opengap import run_bt, ETFOpengapStrategy, MyAnalyzer
+from config.settings import PathConfig
 
-path = Path("~/development/data/SPDR_S&P500_ETF_2010-2020.csv").expanduser()
+config = PathConfig()
+path = Path(config.path_to_etf_data).expanduser()
 df = pd.read_csv(path, parse_dates=["Date"])
 
 data = bt.feeds.PandasData(dataname=df.set_index("Date"),
