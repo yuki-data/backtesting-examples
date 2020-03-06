@@ -49,6 +49,12 @@ class Opengap(bt.Indicator):
         pct_relative_open = bt.DivByZero(self.data0.lines.open - self.data0.lines.close(-1), self.data0.lines.close(-1), bt.NAN)
         self.lines.open_gap_up = (pct_relative_open * 100) > self.p.gapup_threshold
 
+class OpenLine(bt.Indicator):
+    lines = ("open_line",)
+
+    def __init__(self):
+        self.lines.open_line = self.data0.lines.open
+
 
 class ETFOpengapStrategy(bt.Strategy):
     params = (("gapup_threshold", 1), ("unrealized_profit_threshold", 1))
@@ -62,6 +68,8 @@ class ETFOpengapStrategy(bt.Strategy):
         self.dataclose = self.data0.lines.close
         self.dataopen = self.data0.lines.open
         self.buy_signal = Opengap(gapup_threshold=self.params.gapup_threshold).lines.open_gap_up
+
+        self.open_line = OpenLine().open_line
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -100,6 +108,9 @@ class ETFOpengapStrategy(bt.Strategy):
         """
         self.log("next_open {}".format(len(self)))
         template = "{message}(next_open), {price:.2f}"
+
+
+        assert self.data0.lines.open[-1] == self.open_line[0]
 
         if self.order:
             return
