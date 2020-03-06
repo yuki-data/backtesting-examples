@@ -78,22 +78,39 @@ class ETFOpengapStrategy(bt.Strategy):
         self.order = None
 
     def next(self):
-        # print(self.position)
-        if self.position:
-            unrealized_profit = (self.dataopen[0] - self.price_bought) / self.price_bought * 100
-            self.log(unrealized_profit)
-            self.log(self.dataopen[0])
+        """
+        sellのみ実行する。(sell or close)
+        current barでのcloseが含み益の基準を満たすならcheat_on_closeで決済する
+        """
         self.log(len(self))
-        # self.log('Close, %.2f' % self.dataclose[0])
-        # self.log('self.buy_signal, %.2f' % self.buy_signal[0])
-        self.go_long()
+        template = "{message}, {price:.2f}"
+
+        if self.order:
+            return
+        if self.position:
+            if self.recommend_sell() is True:
+                self.log(template.format(message="SELL CREATE", price=self.dataclose[0]))
+                self.order = self.sell(exectype=bt.Order.Market, coc=True, coo=False)
 
     def next_open(self):
-        if self.position:
-            template = "{}(next_open)"
-            unrealized_profit = (self.dataopen[0] - self.price_bought) / self.price_bought * 100
-            self.log(template.format(unrealized_profit))
-            self.log(template.format(self.dataopen[0]))
+        """
+        opengapを基準に仕掛けるのでbuyはnext_openでのみ実行。
+        sellは、含み益が基準なのでnext_openとnextの両方で判定する。
+        buy, sellどちらもcheat_on_openとする
+        """
+        self.log("next_open {}".format(len(self)))
+        template = "{message}(next_open), {price:.2f}"
+
+        if self.order:
+            return
+        if not self.position:
+            if self.recommend_buy() is True:
+                self.log(template.format(message="BUY CREATE", price=self.dataopen[0]))
+                self.order = self.buy(exectype=bt.Order.Market, coc=False, coo=True)
+        else:
+            if self.recommend_sell() is True:
+                self.log(template.format(message="SELL CREATE", price=self.dataopen[0]))
+                self.order = self.sell(exectype=bt.Order.Market, coc=False, coo=True)
 
     def recommend_buy(self):
         if self.buy_signal == 1:
