@@ -51,7 +51,7 @@ class Opengap(bt.Indicator):
 
 
 class ETFOpengapStrategy(bt.Strategy):
-    params = (("gapup_threshold", 1),)
+    params = (("gapup_threshold", 1), ("unrealized_profit_threshold", 1))
 
     def log(self, txt, dt=None):
         dt = dt or self.datas[0].datetime.date(0)
@@ -60,7 +60,7 @@ class ETFOpengapStrategy(bt.Strategy):
     def __init__(self):
         self.order = None
         self.dataclose = self.data0.lines.close
-        self.dateopen = self.data0.lines.open
+        self.dataopen = self.data0.lines.open
         self.buy_signal = Opengap(gapup_threshold=self.params.gapup_threshold).lines.open_gap_up
 
     def notify_order(self, order):
@@ -80,12 +80,20 @@ class ETFOpengapStrategy(bt.Strategy):
     def next(self):
         # print(self.position)
         if self.position:
-            print(self.position.price)
-            assert self.position.price == self.price_bought
+            unrealized_profit = (self.dataopen[0] - self.price_bought) / self.price_bought * 100
+            self.log(unrealized_profit)
+            self.log(self.dataopen[0])
         self.log(len(self))
         # self.log('Close, %.2f' % self.dataclose[0])
         # self.log('self.buy_signal, %.2f' % self.buy_signal[0])
         self.go_long()
+
+    def next_open(self):
+        if self.position:
+            template = "{}(next_open)"
+            unrealized_profit = (self.dataopen[0] - self.price_bought) / self.price_bought * 100
+            self.log(template.format(unrealized_profit))
+            self.log(template.format(self.dataopen[0]))
 
     def recommend_buy(self):
         if self.buy_signal == 1:
@@ -99,7 +107,10 @@ class ETFOpengapStrategy(bt.Strategy):
         # self.order = self.buy(coo=False, coc=True, exectype=bt.Order.Market)
 
     def recommend_sell(self):
-        return len(self) >= (self.bar_executed + 2)
+        unrealized_profit = (self.dataopen[0] - self.price_bought) / self.price_bought * 100
+        # return len(self) >= (self.bar_executed + 2)
+        if unrealized_profit > self.p.unrealized_profit_threshold:
+            return True
 
     def execute_sell(self):
         self.log('SELL CREATE, %.2f' % self.dataclose[0])
