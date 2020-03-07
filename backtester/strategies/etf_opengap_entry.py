@@ -1,5 +1,5 @@
 import backtrader as bt
-from indicators.percent_opengap import Opengap
+from ..indicators.percent_opengap import Opengap
 
 
 class ETFOpengapStrategy(bt.Strategy):
