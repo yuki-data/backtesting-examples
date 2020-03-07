@@ -2,7 +2,10 @@ import datetime
 from pathlib import Path
 import pandas as pd
 import backtrader as bt
-from etf_opengap import run_bt, ETFOpengapStrategy, MyAnalyzer
+# from etf_opengap import run_bt, ETFOpengapStrategy, MyAnalyzer
+from bt_runners.etf_opengap_entry import run_bt
+from analyzers.portfolio import MyAnalyzer
+from strategies.etf_opengap_entry import ETFOpengapStrategy
 from config.settings import PathConfig
 
 config = PathConfig()
