@@ -1,7 +1,8 @@
 import backtrader as bt
 
 
-def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer", trade_size=1, initial_cash=100000,
+def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer",
+           trade_size=1, initial_cash=100000, commission_pct_rate=0.1,
            cheat_on_open=True, cheat_on_close=True, strategy_kwargs={}):
     cerebro = bt.Cerebro(stdstats=False, cheat_on_open=cheat_on_open)
     cerebro.addsizer(bt.sizers.SizerFix, stake=trade_size)
@@ -17,6 +18,8 @@ def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer", trade_size
 
     # Set our desired cash start
     cerebro.broker.setcash(initial_cash)
+    # 手数料
+    cerebro.broker.setcommission(commission=commission_pct_rate * 0.01)
     # Print out the starting conditions
     print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
     # オブザーバーのセット
