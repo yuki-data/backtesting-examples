@@ -1,8 +1,11 @@
 import backtrader as bt
 
 
-def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer", cheat_on_open=True, cheat_on_close=True, strategy_kwargs={}):
+def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer", trade_size=1,
+           cheat_on_open=True, cheat_on_close=True, strategy_kwargs={}):
     cerebro = bt.Cerebro(stdstats=False, cheat_on_open=cheat_on_open)
+    cerebro.addsizer(bt.sizers.SizerFix, stake=trade_size)
+
     if cheat_on_close:
         cerebro.broker.set_coc(True)
     cerebro.addstrategy(Strategy, **strategy_kwargs)
