@@ -77,7 +77,7 @@ class ETFOpengapStrategy(bt.Strategy):
         # self.order = self.buy(coo=False, coc=True, exectype=bt.Order.Market)
 
     def recommend_sell(self):
-        unrealized_profit = (self.dataopen[0] - self.price_bought) / self.price_bought * 100
+        unrealized_profit = (self.dataopen[0] - self.price_buy) / self.price_buy * 100
         # return len(self) >= (self.bar_executed + 2)
         if unrealized_profit > self.p.unrealized_profit_threshold:
             return True
@@ -99,4 +99,4 @@ class ETFOpengapStrategy(bt.Strategy):
     def after_order_completed(self, order):
         self.bar_executed = len(self)
         if order.isbuy():
-            self.price_bought = order.executed.price
+            self.price_buy = order.executed.price
