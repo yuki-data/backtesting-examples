@@ -15,4 +15,5 @@ df = pd.read_csv(path, parse_dates=["Date"])
 data = bt.feeds.PandasData(dataname=df.set_index("Date"),
                            fromdate=datetime.datetime(2011, 3, 1),
                            todate=datetime.datetime(2011, 5, 1))
-cerebro = run_bt(data, Strategy=ETFOpengapStrategy, Analyzer=MyAnalyzer)
+cerebro = run_bt(data, Strategy=ETFOpengapStrategy, Analyzer=MyAnalyzer,
+                 trade_size=1, initial_cash=100000, commission_pct_rate=0)
