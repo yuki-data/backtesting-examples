@@ -13,7 +13,8 @@ class ETFOpengapStrategy(bt.Strategy):
         self.order = None
         self.dataclose = self.data0.lines.close
         self.dataopen = self.data0.lines.open
-        self.buy_signal = Opengap(gapup_threshold=self.params.gapup_threshold).lines.open_gap_up
+        self.buy_signal = Opengap(
+            gapup_threshold=self.params.gapup_threshold).lines.open_gap_up
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -59,8 +60,10 @@ class ETFOpengapStrategy(bt.Strategy):
             return
         if self.position:
             if self.recommend_sell() is True:
-                self.log(template.format(message="SELL CREATE", price=self.dataclose[0]))
-                self.order = self.sell(exectype=bt.Order.Market, coc=True, coo=False)
+                self.log(template.format(
+                    message="SELL CREATE", price=self.dataclose[0]))
+                self.order = self.sell(
+                    exectype=bt.Order.Market, coc=True, coo=False)
 
     def next_open(self):
         """
@@ -75,15 +78,20 @@ class ETFOpengapStrategy(bt.Strategy):
             return
         if not self.position:
             if self.recommend_buy():
-                self.log(template.format(message="BUY CREATE", price=self.dataopen[0]))
-                self.order = self.buy(exectype=bt.Order.Market, coc=False, coo=True)
+                self.log(template.format(
+                    message="BUY CREATE", price=self.dataopen[0]))
+                self.order = self.buy(
+                    exectype=bt.Order.Market, coc=False, coo=True)
         else:
             if self.recommend_sell() is True:
-                self.log(template.format(message="SELL CREATE", price=self.dataopen[0]))
-                self.order = self.sell(exectype=bt.Order.Market, coc=False, coo=True)
+                self.log(template.format(
+                    message="SELL CREATE", price=self.dataopen[0]))
+                self.order = self.sell(
+                    exectype=bt.Order.Market, coc=False, coo=True)
 
     def recommend_buy(self):
-        opengap = (self.dataopen[0] - self.dataclose[-1]) / self.dataclose[-1] * 100
+        opengap = (self.dataopen[0] - self.dataclose[-1]
+                   ) / self.dataclose[-1] * 100
         if opengap > self.p.gapup_threshold:
             return True
 
@@ -95,7 +103,8 @@ class ETFOpengapStrategy(bt.Strategy):
         # self.order = self.buy(coo=False, coc=True, exectype=bt.Order.Market)
 
     def recommend_sell(self):
-        unrealized_profit = (self.dataopen[0] - self.price_buy) / self.price_buy * 100
+        unrealized_profit = (
+            self.dataopen[0] - self.price_buy) / self.price_buy * 100
         # return len(self) >= (self.bar_executed + 2)
         if unrealized_profit > self.p.unrealized_profit_threshold:
             return True
