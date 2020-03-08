@@ -40,6 +40,13 @@ class ETFOpengapStrategy(bt.Strategy):
             self.log('Order Canceled/Margin/Rejected')
         self.order = None
 
+    def notify_trade(self, trade):
+        if not trade.isclosed:
+            return
+
+        self.log('OPERATION PROFIT, GROSS %.2f, NET %.2f' %
+                 (trade.pnl, trade.pnlcomm))
+
     def next(self):
         """
         sellのみ実行する。(sell or close)
