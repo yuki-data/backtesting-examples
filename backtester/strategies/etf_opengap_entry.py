@@ -21,9 +21,20 @@ class ETFOpengapStrategy(bt.Strategy):
             return
         if order.status in [order.Completed]:
             if order.isbuy():
-                self.log('BUY EXECUTED, %.2f' % order.executed.price)
+                self.log(
+                    'BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f' %
+                    (order.executed.price,
+                     order.executed.value,
+                     order.executed.comm))
+
             elif order.issell():
-                self.log('SELL EXECUTED, %.2f' % order.executed.price)
+                profit_rate = (order.executed.price / self.price_buy - 1) * 100
+                self.log('SELL EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f, profit rate %.3f' %
+                         (order.executed.price,
+                          order.executed.value,
+                          order.executed.comm,
+                          profit_rate))
+
             self.after_order_completed(order)
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
             self.log('Order Canceled/Margin/Rejected')
