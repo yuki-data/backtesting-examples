@@ -13,8 +13,7 @@ class ETFOpengapStrategy(bt.Strategy):
         self.order = None
         self.dataclose = self.data0.lines.close
         self.dataopen = self.data0.lines.open
-        self.buy_signal = Opengap(
-            gapup_threshold=self.params.gapup_threshold).lines.open_gap_up
+        # self.buy_signal = Opengap(gapup_threshold=self.params.gapup_threshold).lines.open_gap_up
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
