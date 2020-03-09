@@ -9,3 +9,6 @@ debug/
 
 # 開発環境依存の設定
 local.config.yml
+
+# 個人的なメモ
+private_docs/*
