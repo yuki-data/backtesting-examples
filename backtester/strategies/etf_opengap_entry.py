@@ -58,7 +58,7 @@ class ETFOpengapStrategy(bt.Strategy):
         sellのみ実行する。(sell or close)
         current barでのcloseが含み益の基準を満たすならcheat_on_closeで決済する
         """
-        self.p.log_bar_count:
+        if self.p.log_bar_count:
             self.log(len(self))
         template = "{message}, {price:.2f}"
 
