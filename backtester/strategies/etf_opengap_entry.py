@@ -109,8 +109,11 @@ class ETFOpengapStrategy(bt.Strategy):
     def recommend_sell(self):
         unrealized_profit = (
             self.dataopen[0] - self.price_buy) / self.price_buy * 100
-        # return len(self) >= (self.bar_executed + 2)
-        if unrealized_profit > self.p.unrealized_profit_threshold:
+
+        if (
+            (unrealized_profit > self.p.unrealized_profit_threshold) or
+            (len(self) - self.bar_executed > self.p.max_position_duration)
+        ):
             return True
 
     def execute_sell(self):
