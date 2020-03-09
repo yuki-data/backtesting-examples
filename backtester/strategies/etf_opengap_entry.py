@@ -3,7 +3,7 @@ from ..indicators.percent_opengap import Opengap
 
 
 class ETFOpengapStrategy(bt.Strategy):
-    params = (("gapup_threshold", 1),
+    params = (("gapup_threshold", 1), ("gapdown_threshold", -0.3),
               ("unrealized_profit_threshold", 1), ("max_position_duration", 5))
 
     def log(self, txt, dt=None):
@@ -96,7 +96,11 @@ class ETFOpengapStrategy(bt.Strategy):
     def recommend_buy(self):
         opengap = (self.dataopen[0] - self.dataclose[-1]
                    ) / self.dataclose[-1] * 100
-        if opengap > self.p.gapup_threshold:
+
+        if (
+           (opengap > self.p.gapup_threshold) or
+           (opengap < self.p.gapdown_threshold)
+        ):
             return True
 
     def execute_buy(self):
