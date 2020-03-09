@@ -10,6 +10,9 @@ def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer",
     cerebro.run()および前処理(データ、ストラテジー、アナライザー、オブザーバーの追加)を実行する
 
     Args:
+        data (bt.feeds.PandasData):
+            pandas.Dataframe形式の株価データ。
+            カラムは、['Open', 'High', 'Low', 'Close', 'Volume']とし、インデックスはDateとする
         Strategy (bt.Strategy): 自作のストラテジー
         Analyzer (bt.Analyzer): 自作のAnalyzer
         analyzer_name (str): 自作のAnalyzerの名前
