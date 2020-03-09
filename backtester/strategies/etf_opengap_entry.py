@@ -3,7 +3,8 @@ from ..indicators.percent_opengap import Opengap
 
 
 class ETFOpengapStrategy(bt.Strategy):
-    params = (("gapup_threshold", 1), ("unrealized_profit_threshold", 1))
+    params = (("gapup_threshold", 1),
+              ("unrealized_profit_threshold", 1), ("max_position_duration", 5))
 
     def log(self, txt, dt=None):
         dt = dt or self.datas[0].datetime.date(0)
