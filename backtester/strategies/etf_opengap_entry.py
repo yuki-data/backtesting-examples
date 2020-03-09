@@ -94,9 +94,7 @@ class ETFOpengapStrategy(bt.Strategy):
                     exectype=bt.Order.Market, coc=False, coo=True)
 
     def recommend_buy(self):
-        opengap = (self.dataopen[0] - self.dataclose[-1]
-                   ) / self.dataclose[-1] * 100
-
+        opengap = self.opengap_indicator()
         if (
            (opengap > self.p.gapup_threshold) or
            (opengap < self.p.gapdown_threshold)
@@ -138,3 +136,8 @@ class ETFOpengapStrategy(bt.Strategy):
         self.bar_executed = len(self)
         if order.isbuy():
             self.price_buy = order.executed.price
+
+    def opengap_indicator(self):
+        opengap = (self.dataopen[0] - self.dataclose[-1]
+                   ) / self.dataclose[-1] * 100
+        return opengap
