@@ -29,11 +29,15 @@ class ETFOpengapStrategy(bt.Strategy):
 
             elif order.issell():
                 profit_rate = (order.executed.price / self.price_buy - 1) * 100
-                self.log('SELL EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f, profit rate %.3f' %
+                self.log("SELL EXECUTED,"
+                         "Price: %.2f, Cost: %.2f, Comm %.2f, profit rate %.3f, "
+                         "position duration %s" %
                          (order.executed.price,
                           order.executed.value,
                           order.executed.comm,
-                          profit_rate))
+                          profit_rate,
+                          len(self) - self.bar_executed
+                          ))
 
             self.after_order_completed(order)
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
