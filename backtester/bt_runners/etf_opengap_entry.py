@@ -4,8 +4,8 @@ import backtrader as bt
 def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer",
            trade_size=1, initial_cash=100000, commission_pct_rate=0.1,
            cheat_on_open=True, cheat_on_close=True, strategy_kwargs={},
-           builtin_analyzers=None):
-    cerebro = bt.Cerebro(stdstats=False, cheat_on_open=cheat_on_open)
+           builtin_analyzers=None, builtin_observers=None, stdstats=True):
+    cerebro = bt.Cerebro(stdstats=stdstats, cheat_on_open=cheat_on_open)
     cerebro.addsizer(bt.sizers.SizerFix, stake=trade_size)
 
     if cheat_on_close:
@@ -27,10 +27,10 @@ def run_bt(data, Strategy, Analyzer=None, analyzer_name="myanalyzer",
     # Print out the starting conditions
     print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
     # オブザーバーのセット
-    cerebro.addobserver(bt.observers.DrawDown)
-    # cerebro.addobserver(bt.observers.Trades) # ここの取引での損益
-    cerebro.addobserver(bt.observers.BuySell)  # buy-sellボイントでのマーカー
-    cerebro.addobserver(bt.observers.Value)  # 資産曲線
+    if builtin_observers:
+        for observer in builtin_observers:
+            cerebro.addobserver(observer)
+
     # Run over everything
     thestrats = cerebro.run()
     setattr(cerebro, "thestrats", thestrats)
