@@ -4,7 +4,8 @@ from ..indicators.percent_opengap import Opengap
 
 class ETFOpengapStrategy(bt.Strategy):
     params = (("gapup_threshold", 1), ("gapdown_threshold", -0.3),
-              ("unrealized_profit_threshold", 1), ("max_position_duration", 5))
+              ("unrealized_profit_threshold", 1), ("max_position_duration", 5),
+              ("log_bar_count", True))
 
     def log(self, txt, dt=None):
         dt = dt or self.datas[0].datetime.date(0)
@@ -57,7 +58,8 @@ class ETFOpengapStrategy(bt.Strategy):
         sellのみ実行する。(sell or close)
         current barでのcloseが含み益の基準を満たすならcheat_on_closeで決済する
         """
-        self.log(len(self))
+        self.p.log_bar_count:
+            self.log(len(self))
         template = "{message}, {price:.2f}"
 
         if self.order:
@@ -75,7 +77,9 @@ class ETFOpengapStrategy(bt.Strategy):
         sellは、含み益が基準なのでnext_openとnextの両方で判定する。
         buy, sellどちらもcheat_on_openとする
         """
-        self.log("next_open {}".format(len(self)))
+        if self.p.log_bar_count:
+            self.log("next_open {}".format(len(self)))
+
         template = "{message}(next_open), {price:.2f}"
 
         if self.order:
